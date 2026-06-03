@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>问渠甲方脚本修改</title>
+  <style>
+    :root {
+      --ink: #172522;
+      --muted: #65746f;
+      --deep: #0f3d36;
+      --green: #1f6d5a;
+      --sage: #dfe9e4;
+      --paper: #f7f5ed;
+      --card: #fffdf7;
+      --gold: #b9904a;
+      --line: rgba(23, 37, 34, .14);
+      --shadow: 0 24px 70px rgba(16, 38, 34, .16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      background:
+        linear-gradient(180deg, rgba(11, 55, 48, .92) 0, rgba(11, 55, 48, .76) 420px, transparent 780px),
+        radial-gradient(circle at 10% 0%, rgba(185, 144, 74, .2), transparent 460px),
+        var(--paper);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    .page {
+      width: min(1180px, calc(100vw - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 820px;
+      display: grid;
+      align-items: end;
+      padding: 44px 0 42px;
+      color: var(--deep);
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 46px;
+      color: rgba(255, 255, 255, .74);
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(360px, 1.08fr);
+      gap: 38px;
+      align-items: end;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid rgba(15, 61, 54, .22);
+      border-radius: 999px;
+      color: #18483f;
+      background: rgba(255, 253, 247, .62);
+      backdrop-filter: blur(8px);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #9bd6c6;
+      box-shadow: 0 0 18px rgba(155, 214, 198, .8);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 96px;
+      line-height: .92;
+      letter-spacing: 0;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+      color: #123c35;
+      text-shadow: 0 1px 14px rgba(255, 253, 247, .42);
+    }
+
+    .hero-copy {
+      margin: 24px 0 0;
+      font-size: 21px;
+      line-height: 1.8;
+      max-width: 650px;
+      color: #2b4b43;
+    }
+
+    .hero-media {
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: #10251f;
+    }
+
+    .hero-media img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      color: rgba(255, 255, 255, .76);
+      background: rgba(10, 34, 29, .92);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .draft-label {
+      color: #f2d18b;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .section {
+      padding: 72px 0;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 48px;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--deep);
+      overflow-wrap: anywhere;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      line-height: 1.35;
+      color: var(--deep);
+      overflow-wrap: anywhere;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.86;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .lead {
+      font-size: 18px;
+      color: #46544f;
+      max-width: 800px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 34px rgba(20, 39, 36, .08);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .summary .panel {
+      padding: 24px;
+    }
+
+    .summary strong {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--deep);
+      font-size: 18px;
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .compare .panel {
+      overflow: hidden;
+    }
+
+    .compare-title {
+      padding: 18px 22px;
+      background: var(--deep);
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .compare-title.new {
+      background: linear-gradient(90deg, #164b3f, #2b7967);
+    }
+
+    .compare-body {
+      padding: 24px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .row:last-child { border-bottom: 0; }
+
+    .row b {
+      color: var(--green);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .row span {
+      color: #3e4d48;
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .diff-card {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .86), rgba(255, 253, 247, .96));
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .diff-card .num {
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .opening-routes {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .route-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 14px 38px rgba(20, 39, 36, .09);
+    }
+
+    .route-card > img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #10251f;
+    }
+
+    .route-body {
+      padding: 22px 24px 24px;
+    }
+
+    .route-tag {
+      display: inline-flex;
+      margin-bottom: 14px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #1f6d5a;
+      background: #e6f0ec;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .route-note {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: #8a6a2e;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .logic-board {
+      min-height: 338px;
+      padding: 26px;
+      background:
+        linear-gradient(135deg, rgba(15, 61, 54, .95), rgba(23, 74, 65, .88)),
+        #123c35;
+      color: #fff;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+    }
+
+    .logic-node {
+      position: relative;
+      padding: 13px 16px 13px 46px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .9);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .logic-node::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #d6b56d;
+      transform: translateY(-50%);
+      box-shadow: 0 0 0 4px rgba(214, 181, 109, .18);
+    }
+
+    .logic-arrow {
+      color: rgba(255, 255, 255, .58);
+      text-align: center;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .concept {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .concept .panel {
+      padding: 26px;
+    }
+
+    .quote {
+      padding: 34px;
+      background: #123c35;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 34px;
+      line-height: 1.35;
+      font-weight: 700;
+      min-height: 100%;
+      display: grid;
+      align-content: center;
+    }
+
+    .quote small {
+      display: block;
+      margin-top: 18px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, .72);
+      font-weight: 400;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .step {
+      min-height: 180px;
+      padding: 18px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fffdf8, #eef5f2);
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    .step strong {
+      display: block;
+      min-height: 48px;
+      color: var(--deep);
+      line-height: 1.35;
+      font-size: 18px;
+    }
+
+    .step p {
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .visual-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .image-card {
+      overflow: hidden;
+      background: #10251f;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .image-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .image-note {
+      padding: 14px 16px;
+      background: #0f302a;
+      color: rgba(255, 255, 255, .78);
+      font-size: 13px;
+      line-height: 1.6;
+      display: flex;
+      gap: 14px;
+      justify-content: space-between;
+    }
+
+    .rules {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .rules .panel {
+      padding: 24px;
+    }
+
+    ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: #3e4d48;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .footer {
+      padding: 48px 0 76px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 920px) {
+      .page { width: min(100vw - 28px, 760px); }
+      .hero-grid,
+      .section-head,
+      .compare,
+      .concept,
+      .opening-routes,
+      .visual-grid,
+      .rules {
+        grid-template-columns: 1fr;
+      }
+      .summary,
+      .diff-grid {
+        grid-template-columns: 1fr;
+      }
+      .timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .topline {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 32px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(360px, calc(100vw - 28px));
+        margin-left: 14px;
+        margin-right: auto;
+      }
+      .hero { min-height: auto; padding-top: 28px; }
+      .hero-grid { gap: 26px; }
+      h1 { font-size: 42px; }
+      h2 {
+        font-size: 30px;
+        line-height: 1.16;
+        word-break: break-all;
+      }
+      .hero-copy { font-size: 17px; }
+      .kicker {
+        border-color: rgba(255, 255, 255, .24);
+        color: rgba(255, 255, 255, .82);
+        background: rgba(255, 255, 255, .08);
+      }
+      h1 {
+        color: #fff;
+        text-shadow: none;
+      }
+      .hero-copy {
+        color: rgba(255, 255, 255, .88);
+      }
+      .quote { font-size: 24px; }
+      .draft-label { white-space: normal; }
+      .timeline { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; gap: 4px; }
+      .section { padding: 48px 0; }
+      .caption,
+      .image-note {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="page">
+      <div class="topline">
+        <span>StraitPass / 问渠 · 客户提案网页</span>
+        <span>脚本修改说明 · 2026/06/03</span>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">最终修改方向</div>
+          <h1>问渠甲方脚本修改</h1>
+          <p class="hero-copy">在保留甲方“生命之树 / 枯木新生”主线的基础上，我们将脚本调整为“水滴主角版”：以一滴水作为引导介质，从生命源点出发，进入树的脉络，发现内部淤堵，完成温和净化，并最终回到品牌树形与产品收束。</p>
+        </div>
+        <figure class="hero-media">
+          <img src="assets/hollywood_forest_opening.png" alt="好莱坞写实古树开场示意图">
+          <figcaption class="caption">
+            <span>开场方案 A：好莱坞写实古树。奇观感来自真实树冠尺度、湿润树皮和自然体积光，而不是满屏光点。</span>
+            <span class="draft-label">示意草稿图，不是最终成品效果图</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Executive Summary</div>
+          <div>
+            <h2>我们不是推翻原 Brief，而是让它更像一支问渠品牌片。</h2>
+            <p class="lead">原始 brief 已经确定了“生命舒展、生命困顿、甘露启愈、枯木新生”的方向。我们这次修改的重点，是把这个泛生命复苏叙事，转化为更有产品关联、更有镜头因果、更适合生成视频的版本。</p>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="panel">
+            <strong>保留</strong>
+            <p>保留甲方确认的生命之树、困顿、净化、复苏、产品收束五段主线。</p>
+          </div>
+          <div class="panel">
+            <strong>增强</strong>
+            <p>加入水滴作为全片引导介质，让观众从生命源点进入树的内部脉络。</p>
+          </div>
+          <div class="panel">
+            <strong>规避</strong>
+            <p>避免巨大树洞、外伤、黑色矿石病灶、宇宙树、满屏光斑和纯魔法疗愈感。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Opening Direction</div>
+          <div>
+            <h2>第一帧建议先给甲方两条路线，不把风险压在一张图上。</h2>
+            <p class="lead">我们昨天不满意的点是对的：如果首帧走写实，就必须像一棵真正有生命力的树；如果暂时不走写实，就应该改成导演逻辑图，先把“品牌树形如何转译为水滴主角版脚本”讲清楚。</p>
+          </div>
+        </div>
+
+        <div class="opening-routes">
+          <article class="route-card">
+            <img src="assets/hollywood_forest_opening.png" alt="好莱坞写实古树开场示意图">
+            <div class="route-body">
+              <span class="route-tag">方案 A · 好莱坞写实开场</span>
+              <h3>人仰视森林脉络，先建立“生命力”和真实尺度。</h3>
+              <p>适合直接进入成片画面。开场不是发光树、宇宙树或魔法树，而是湿润、古老、巨大、真实的森林生命体；奇幻感只藏在后续水滴进入内部时释放。</p>
+              <ul>
+                <li>保留遮天蔽日、仰视古树、枝干脉络的震撼感。</li>
+                <li>严格减少光斑、粒子、萤火虫式装饰光。</li>
+                <li>品牌树形只在树冠负形和枝干走势里轻微暗示。</li>
+              </ul>
+              <div class="route-note">示意草稿图，不是最终成品效果图</div>
+            </div>
+          </article>
+
+          <article class="route-card">
+            <div class="logic-board" aria-label="导演逻辑图">
+              <div class="logic-node">品牌树形母题：脑形树冠 / 树干根系 / 青绿生命色</div>
+              <div class="logic-arrow">↓</div>
+              <div class="logic-node">转译为生命源点：脑干与树脉交汇</div>
+              <div class="logic-arrow">↓</div>
+              <div class="logic-node">水滴成为引导介质：带观众进入深处</div>
+              <div class="logic-arrow">↓</div>
+              <div class="logic-node">内部淤堵被发现：墨雾状浊质阻滞通路</div>
+              <div class="logic-arrow">↓</div>
+              <div class="logic-node">脉络显影与产品收束：生命树轻微回到品牌轮廓</div>
+            </div>
+            <div class="route-body">
+              <span class="route-tag">方案 B · 导演逻辑图开场</span>
+              <h3>先用“品牌转译流程”说服甲方，再进入水滴故事。</h3>
+              <p>如果甲方对写实首帧还不确定，可以用这个方式开场：先把 logo 树形抽象成视觉逻辑，再自然过渡到水滴主角、内部淤堵和复苏过程。它更适合提案讲解，也能避免首帧效果图被误读为最终画面。</p>
+              <div class="route-note">逻辑图为导演结构示意，不是最终成品画面</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Brief Contrast</div>
+          <div>
+            <h2>原本 Brief 与最新脚本的核心区别</h2>
+            <p class="lead">原 brief 更像一条宏观的生命复苏叙事；最新脚本把复苏过程拆成可拍、可生成、可解释的视觉路径。</p>
+          </div>
+        </div>
+
+        <div class="compare">
+          <div class="panel">
+            <div class="compare-title">原本 Brief</div>
+            <div class="compare-body stack">
+              <div class="row"><b>开场</b><span>镜头从远及近，出现一棵挺拔的生命之树，展示自然生长节律。</span></div>
+              <div class="row"><b>困顿</b><span>风云骤起，树叶枯黄脱落，树干干涩、粗糙、发白，整体进入死寂状态。</span></div>
+              <div class="row"><b>净化</b><span>画面产生精准、柔和的向内抽吸净化动态，阴云和浑浊雾气被抽离。</span></div>
+              <div class="row"><b>甘露</b><span>暖光凝聚甘露，精准落在干裂枝干缝隙，浸润皮层。</span></div>
+              <div class="row"><b>复苏</b><span>能量沿枝干脉络扩散，枯枝发芽，整棵树重归繁茂。</span></div>
+              <div class="row"><b>结尾</b><span>水滴从叶尖落下，变幻勾勒产品形象，出现产品、名称和 logo。</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="compare-title new">最新脚本 · 水滴主角版</div>
+            <div class="compare-body stack">
+              <div class="row"><b>开场</b><span>不直接给树全景，而是从生命源点和水滴出发，让水滴带观众进入生命系统。</span></div>
+              <div class="row"><b>建立</b><span>水滴沿主脉上行，微观脉络逐渐外化为真实森林中的宏大生命之树。</span></div>
+              <div class="row"><b>困顿</b><span>树外表保持完整，只出现干涩、暗沉、细微裂纹；真正问题藏在内部。</span></div>
+              <div class="row"><b>病变</b><span>病变改为内部暗沉节点和墨雾状浊质淤堵，不做巨大树洞或外伤。</span></div>
+              <div class="row"><b>净化</b><span>水滴进入内部，温和包裹、溶解并带走墨色浊质，点亮脉络。</span></div>
+              <div class="row"><b>收束</b><span>树冠复苏时轻微呼应品牌树形，最后水滴从新叶落下转产品。</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">What Changed</div>
+          <div>
+            <h2>本次修改具体增加了什么</h2>
+          </div>
+        </div>
+
+        <div class="diff-grid">
+          <div class="diff-card">
+            <div class="num">01</div>
+            <h3>水滴成为叙事主角</h3>
+            <p>水滴不再只是中段落下的甘露，而是从生命源点凝结出发，贯穿建立、发现、进入、净化、显影和收束。</p>
+          </div>
+          <div class="diff-card">
+            <div class="num">02</div>
+            <h3>病变改成内部淤堵</h3>
+            <p>避免树洞、伤口和恐怖病灶。外部保持完整，内部以暗沉节点和墨雾状浊质表现通路停滞。</p>
+          </div>
+          <div class="diff-card">
+            <div class="num">03</div>
+            <h3>树的出现更有因果</h3>
+            <p>从微观主脉外化为宏大生命树，不再只是开场直接给一个普通全景。</p>
+          </div>
+          <div class="diff-card">
+            <div class="num">04</div>
+            <h3>品牌树形变成自然暗示</h3>
+            <p>不直接贴 logo，而是在树冠负形、枝干走向和复苏后的轮廓中轻微呼应品牌树形。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Creative Idea</div>
+          <div>
+            <h2>最新理念：生命通路重新流动</h2>
+          </div>
+        </div>
+        <div class="concept">
+          <div class="quote">
+            不是“把树治好”，而是让深处的生命通路重新流动。
+            <small>一滴来自生命源点的青绿色银光水滴，沿着脑干般的主脉进入生命之树，发现深处通路被墨色浊质阻滞；它温和浸润、溶解并带走浊暗，使沉寂脉络重新显影，最终让生命树以接近品牌树的形态重归舒展。</small>
+          </div>
+          <div class="panel">
+            <h3>建议旁白主线</h3>
+            <ul>
+              <li>生命的源头，藏着流动的秩序。</li>
+              <li>一滴清澈，从深处出发。</li>
+              <li>当浊暗停留，通路开始变慢。</li>
+              <li>它不冲破深处，只唤醒流动。</li>
+              <li>浊暗散开，脉络重见清晰。</li>
+              <li>问渠，让深处拥有更清晰的可视路径。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Storyboard</div>
+          <div>
+            <h2>建议先验证 6 个关键帧</h2>
+            <p class="lead">我们建议下一步不直接做完整视频，而是先确认 6 张关键帧。关键帧通过后，再拆成 I2V / V2V 视频段落。</p>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="step"><b>01</b><strong>开场路线确认</strong><p>可选好莱坞写实古树，或品牌树形到水滴主角的导演逻辑图。</p></div>
+          <div class="step"><b>02</b><strong>水滴从生命源点出发</strong><p>脑干 / 树根 / 水脉交汇处凝结水滴。</p></div>
+          <div class="step"><b>03</b><strong>水滴外化出生命树</strong><p>微观主脉向外转场为宏大古树。</p></div>
+          <div class="step"><b>04</b><strong>外部树皮完整但暗沉</strong><p>干涩、细裂纹，水滴感知深处停滞。</p></div>
+          <div class="step"><b>05</b><strong>内部暗沉节点与墨雾</strong><p>不做树洞，病变藏在内部主脉交汇处。</p></div>
+          <div class="step"><b>06</b><strong>脉络显影与品牌树复苏</strong><p>水滴带走浊质，树冠轻微呼应品牌树形。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Visual Direction</div>
+          <div>
+            <h2>画面参考与视觉边界</h2>
+            <p class="lead">以下图片只用于说明气质、结构和阶段变化。新版八宫格按自然纪录片气质重做，避免官方宣传板、科幻奇观和满屏光点。正式制作时会重新生成关键帧和视频，不以当前草稿图作为最终成品画面。</p>
+          </div>
+        </div>
+
+        <div class="visual-grid">
+          <figure class="image-card">
+            <img src="assets/hollywood_forest_opening.png" alt="好莱坞写实古树开场">
+            <figcaption class="image-note">
+              <span>开场方案 A 方向：真实森林、仰视古树、无装饰性光斑，奇观感来自树的尺度、湿润质感和体积光。</span>
+              <span class="draft-label">示意草稿图，不是最终成品效果图</span>
+            </figcaption>
+          </figure>
+
+          <div class="panel" style="padding: 24px;">
+            <h3>外部世界的标准</h3>
+            <ul>
+              <li>真实自然森林，而不是宇宙树或科幻世界树。</li>
+              <li>奇观感来自树冠尺度、枝干结构、雾气层次和体积光。</li>
+              <li>避免光斑、闪粉、漂浮粒子、萤火虫式装饰光。</li>
+              <li>品牌树形只做自然负形暗示，不直接贴 logo。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="height: 22px;"></div>
+
+        <figure class="image-card">
+          <img src="assets/discovery_nature_storyboard_grid.png" alt="水滴主角版八宫格自然纪录片过程示意">
+          <figcaption class="image-note">
+            <span>八宫格过程方向：自然森林、真实水滴、树皮微距、内部水脉淤堵、水滴温和净化、生命树自然复苏。</span>
+            <span class="draft-label">示意草稿图，不是最终成品效果图</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <div class="section-head">
+          <div class="eyebrow">Execution Rules</div>
+          <div>
+            <h2>后续生成和制作的硬性约束</h2>
+          </div>
+        </div>
+
+        <div class="rules">
+          <div class="panel">
+            <h3>必须坚持</h3>
+            <ul>
+              <li>外部真实自然，内部局部 magical。</li>
+              <li>水滴作为全片引导介质。</li>
+              <li>病变是内部墨雾淤堵，不是外伤。</li>
+              <li>复苏后树冠轻微呼应品牌树形。</li>
+              <li>产品、名称、logo 由后期准确加入。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>明确规避</h3>
+            <ul>
+              <li>不要巨大树洞、开裂大洞、剖开树干。</li>
+              <li>不要黑色矿石、血块、肿瘤或恐怖病灶。</li>
+              <li>不要宇宙、星球、太空、科幻世界树。</li>
+              <li>不要光斑、闪粉、漂浮粒子、满屏点状高光。</li>
+              <li>不要让 AI 直接生成文字、产品名和 logo。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page">
+      <p>问渠甲方脚本修改 · 静态网页提案。建议以本页确认方向后，再进入单帧关键帧精修与分段视频生成。</p>
+    </div>
+  </footer>
+</body>
+</html>
